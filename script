@@ -1,0 +1,76 @@
+from gettext import find
+from time import sleep
+from typing import Type
+from urllib import request
+import gspread
+sa = gspread.service_account(filename="service acount from API")
+sh = sa.open("Name of WorkSheet1")
+sh2 = sa.open("Name of WorkSheet2")
+wks1_1 = sh.worksheet("Name of Sheet1 from WorkSheet1")
+wks1_2 = sh2.worksheet("Name of Sheet1 from WorkSheet2")
+wks2_2 = sh2.worksheet("Name of Sheet2 from WorkSheet2")
+wks3_2 = sh2.worksheet("Name of Sheet3 from WorkSheet2")
+wks4_2 = sh2.worksheet("Name of Sheet4 from WorkSheet2")
+wks5_2 = sh2.worksheet("Name of Sheet5 from WorkSheet2")
+wks6_2 = sh2.worksheet("Name of Sheet6 from WorkSheet2")
+wks7_2 = sh2.worksheet("Name of Sheet7 from WorkSheet2")
+wks8_2 = sh2.worksheet("Name of Sheet8 from WorkSheet2")
+
+
+i = wks1_2.cell(30,2).value  #i is = to the last row that the program read
+Evalname = wks1_1.cell(i,5).value
+Agentname = wks1_1.cell(i,3).value
+
+
+
+while wks1_1.cell(i, 5).value != None: # Program will read all cell values not = to "None"
+    def rdwt(wks): # this defins the reading of sheet1 and the writing to sheet2
+        agent_row = wks.find(Agentname).row
+        agent_col = wks.find(Agentname).col
+        eval_count = agent_col + 2 
+        num_agt = int(wks.cell(agent_row, eval_count).value)
+        wks.update_cell(agent_row, eval_count, num_agt + 1)
+        return
+    def addvle(wks): # if the value on sheet 1 is = to none this will "append" those values to the takslist in sheet2
+        wks.append_row([Evalname,Agentname, wks1_1.cell(i,4).value,  1, 2,])
+        rdwt(wks)
+    if Evalname == "Name of Evaluator1":
+        if wks4_2.find(Agentname) == None:
+            addvle(wks4_2)
+        rdwt(wks4_2)
+        sleep(10) # pauses the program to allow for the limits of the google API
+    elif Evalname == "Name of Evaluator2":
+        if wks6_2.find(Agentname) == None:
+            addvle(wks6_2)
+        rdwt(wks6_2)
+        sleep(10)
+    elif Evalname == "Name of Evaluator3":
+        if wks2_2.find(Agentname) == None:
+            addvle(wks2_2)
+        rdwt(wks2_2)
+        sleep(10)
+    elif Evalname == "Name of Evaluator4":
+        if wks3_2.find(Agentname) == None:
+            addvle(wks3_2)
+        rdwt(wks3_2)
+        sleep(10)    
+    elif Evalname == "Name of Evaluator5":
+        rdwt(wks5_2)
+        sleep(10)       
+    elif Evalname == "Name of Evaluator6":
+        rdwt(wks7_2)
+        if wks7_2.find(Agentname) == None:
+            addvle(wks7_2)
+        sleep(10)    
+    elif Evalname == "Name of Evaluator7":
+        if wks8_2.find(Agentname) == None:
+            addvle(wks3_2)
+        rdwt(wks8_2)
+        sleep(10)    
+    else:
+        print("Agent Not Found!")
+    i = i + 1
+    Evalname = wks1_1.cell(i,5).value
+    Agentname = wks1_1.cell(i,3).value
+wks1_2.update_cell(30,2, i) # Upon reaching a value that is = to "None" the program will stop and update a cell with the row number that it stopped at. 
+This allows me to run the program mulitple times through out the day without me having to change the 'i' value. It will do it automaticlly. 
